@@ -1,0 +1,25 @@
+1. List Towns
+
+You are given an input field with a button. In the input field you should enter elements separated by comma and whitespace (", ").
+Your task is to create a simple template that defines a list of towns.
+Each town comes from the input field. The list should be rendered inside the element with Id "root".
+
+2. HTTP Status Cats
+
+We all love cats. They are also a fun way to learn all the HTTP status codes.
+Your task is to create a template to represent an HTTP cat card.
+After you have created the template, render all the cats into the section with id "allCats". Note that there should be a nested <ul> inside the section.
+An HTTP cat has an id, statusCode, statusMessage and imageLocation. 
+The cats are seeded using the function from the JS file named "catSeeder.js" – import this file as a module.
+Each card block has a button that reveals its status code. You should toggle the button and change its text from "Show status code" to "Hide status code".
+See the file example.html for an example of how the rendered HTML should look like.
+
+3. Search in List
+
+An HTML page holds a list of towns, a search box and a [Search] button.
+Create a template for a list, containing all towns, that can be easily updated when the user performs a search.
+The list should be rendered inside the <div> element with id "towns". Load the values from the file towns.js, which you can import as a module.
+
+Implement the search function to apply class "active" to the items from the list which include the text from the search box.
+Also print the number of items the current search matches in the format "<matches> matches found". The search should be case-sensitive.
+See the file example.html for an example of how the rendered HTML should look like.
