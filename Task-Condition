@@ -1,0 +1,279 @@
+1. Overview
+
+Implement a front-end app (SPA) for creating and managing events. The application allows visitors to browse through the event catalog.
+Users may register with an email and a password which allows them to create their own events.
+Event authors can also edit or delete their own publications at any time.
+
+2. Technical Details
+
+You are provided with the following resources:
+
+· Project scaffold: A package.json file, containing a list of common dependencies.
+You may change the included libraries to your preference. 
+The sections devDependencies and scripts of the file are used by the automated testing suite, altering them may result in incorrect test operation.
+
+To initialize the project, execute the command npm install via the command-line terminal.
+
+· HTML and CSS files: All views (pages) of the application, including sample user-generated content, are included in the file index.html, 
+which links to CSS and other static files. Each view is in a separate section of the file, which can be identified by a unique class name or id attribute. 
+Your application may use any preferred method (such as a templating library or manual visibility settings)
+to display only the selected view and to navigate between views upon user interaction.
+
+· Local REST service: A special server, which contains sample data and supports user registration and CRUD operations via REST requests is included with the project. Each section of this document (where applicable) includes details about the necessary REST endpoints, to which requests must be sent, and the shape of the expected request body.
+
+For more information on how to use the included server, see Appendix A: Using the Local REST Service at the end of this document.
+
+· Automated tests: A complete test suite is included, which can be used to test the correctness of your solution.
+Your work will be assessed, based on these tests.
+
+For more information on how to run the tests, see Appendix B: Running the Test Suite at the end of this document.
+
+Do not use CDN for loading the dependencies because it can affect the tests in a negative way!
+
+Note: When creating HTML Elements and displaying them on the page, adhere as close as possible to the provided HTML samples.
+Changing the structure of the document may prevent the tests from running correctly, which will adversely affect your assessment grade. 
+You may add attributes (such as class and dataset) to any HTML Element, as well as change "href" attributes on
+links and add/change the method and action attributes of HTML Forms, to facilitate the correct operation of a routing library or another method of abstraction.
+You may also add hidden elements to help you implement certain parts of the application requirements.
+
+3. Application Requirements
+
+Navigation Bar (5 pts)
+
+Implement a NavBar for the app:
+
+Navigation links should correctly change the current page (view).
+All users can see the site logo that should be a link to the Home page as well as the Dashboard and To Events button which should link to the Events page.
+Guests (un-authenticated visitors) can see the links to the Login and Register pages.
+The logged-in user navbar should contain the links to the Add Event page and a link for the Logout action.
+
+Home page (10 pts)
+
+Implement a static Home page for the app using the structure for it from the given resources.
+
+Login User (5 pts)
+
+The included REST service comes with the following premade user accounts, which you may use for development:
+
+{ "email": "peter@abv.bg", "password": "123456" }
+
+{ "email": "john@abv.bg", "password": "123456" }
+
+The Login page contains a form for existing user authentication. By providing an email and a password the app should login a user in the system if there are no empty fields.
+Send the following request to perform login:
+
+Method: POST
+
+URL: /users/login
+
+The required headers are described in the documentation. The service expects a body with the following shape:
+
+{
+
+email,
+
+password
+
+}
+
+Upon success, the REST service will return the newly created object with an automatically generated _id and a property accessToken, which contains the session token for the user – you need to store this information using sessionStorage or localStorage, in order to be able to perform authenticated requests.
+
+If the login was successful, redirect the user to the Home page. If there is an error, or the validations don’t pass, display an appropriate error message, using a system dialog (window.alert).
+
+Register Page (10 pts)
+
+By given email, password app should register a new user in the system.
+All fields are required – if any of them is empty, or the password and repeat password doesn't match, display an error.
+
+Send the following request to perform registration:
+
+Method: POST
+
+URL: /users/register
+
+Required headers are described in the documentation. The service expects a body with the following shape:
+
+{
+
+email,
+
+password
+
+}
+
+Upon success, the REST service will return the newly created object with an automatically generated _id and a property accessToken,
+which contains the session token for the user – you need to store this information using sessionStorage or localStorage, 
+in order to be able to perform authenticated requests.
+
+If the registration was successful, redirect the user to the Home page.
+
+Logout (5 pts)
+
+The logout action is available to logged-in users. Send the following request to perform logout:
+
+Method: GET
+
+URL: /users/logout
+
+Required headers are described in the documentation. Upon success, the REST service will return an empty response.
+Clear any session information you’ve stored in browser storage.
+
+If the logout was successful, redirect the user to the Home page.
+
+Dashboard (15 pts)
+
+This page displays a list of all events in the system. Clicking on the details button in the event leads to the details page for the selected event.
+This page should be visible to guests and logged-in users.
+
+If there are no events, the following view should be displayed:
+
+Send the following request to read the list of ads:
+
+Method: GET
+
+URL: /data/events?sortBy=_createdOn%20desc
+
+Required headers are described in the documentation. The service will return an array of events.
+
+Adding New Event(15 pts)
+
+The Create page is available to logged-in users. It contains a form for adding a new event. Check if all the fields are filled before you send the request.
+
+To create event, send the following request:
+
+Method: POST
+
+URL: /data/events
+
+Required headers are described in the documentation. The service expects a body with the following shape:
+
+{
+
+name,
+
+imageUrl,
+
+category,
+
+description,
+
+date
+
+}
+
+Required headers are described in the documentation. The service will return the newly created record. Upon success, redirect the user to the Events page.
+
+Event Details (10 pts)
+
+All users should be able to view details about the events.
+Clicking the Details link in of a event card should display the Details page. 
+If the currently logged-in user is the creator, the Edit and Delete buttons should be displayed.Otherwise, they should not be available.
+The view should look like this to the creator of the event record:
+
+The view should look like this to guest users:
+
+Send the following request to read a single event:
+
+Method: GET
+
+URL: /data/events/:id
+
+Where :id is the ID of the desired card. The required headers are described in the documentation. The service will return a single object.
+
+Edit an Event (15 pts)
+
+The Edit page is available to logged-in users and it allows authors to edit their own event.
+Clicking the Edit link of a particular event on the Details page should display the Edit page, with all fields filled with the data for the event. 
+It contains a form with input fields for all relevant properties.
+Check if all the fields are filled before the user sends the request.
+
+
+If there is an error, or the validations don’t pass, display an appropriate error message, using a system dialog (window.alert).
+
+To edit a event, send the following request:
+
+Method: PUT
+
+URL: /data/events/:id
+
+Where :id is the id of the desired card.
+
+The service expects a body with the following shape:
+
+{
+
+name,
+
+imageUrl,
+
+category,
+
+description,
+
+date
+
+}
+
+The required headers are described in the documentation. The service will return the modified record.
+Note that PUT requests do not merge properties and will instead replace the entire record.
+Upon success, redirect the user to the Details page for the current event.
+
+Delete Event (10 pts)
+
+The delete action is available to logged-in users, for events they have created. When the author clicks on the Delete action on any of their event,
+a confirmation dialog should be displayed, and upon confirming this dialog, the event should be deleted from the system.
+
+To delete event, send the following request:
+
+Method: DELETE
+
+URL: /data/events/:id
+
+Where :id is the id of the desired event. The required headers are described in the documentation.
+The service will return an object, containing the deletion time. Upon success, redirect the user to the Events page.
+
+BONUS: Go to Event (15 Pts)
+
+Every logged-in user should be able to go to event, but not his own. By clicking on the [Going] button, the counter of each event increases by 1.
+
+The view when the user did not press [Going] button should look like:
+
+When the user Go to the event the [Going] button should not be available and the counter should be increased by 1.
+
+Creator should not be able to see the [Going] button. The view should look like:
+
+Guest should not be able to see the [Going] button. The view for guests should look like:
+
+Send the following request to add people to the event:
+
+Method: POST
+
+URL: /data/going
+
+The service expects a body with the following shape:
+
+{
+
+eventId
+
+}
+
+The required headers are described in the documentation. The service will return the newly created record.
+
+Send the following request to get total going count for a event:
+
+Method: GET
+
+URL: /data/going?where=eventId%3D%22{eventId}%22&distinct=_ownerId&count
+
+Where {eventId} is the id of the desired event. Required headers are described in the documentation. The service will return the total going count.
+
+Send the following request to get the number of the goings for a event for specific user:
+
+Method: GET
+
+URL:/data/going?where=eventId%3D%22{eventId}%22%20and%20_ownerId%3D%22{userId}%22&count
+
+Where {eventId} is the id of the desired event and {userId} is the id of the currently logged-in user. 
+Required headers are described in the documentation. The service will return either 0 or 1.
+Depends on that result the [Going] button should be displayed or not.
